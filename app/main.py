@@ -26,7 +26,8 @@ default_origins = [
     "http://localhost:3000",  # Assuming React frontend runs on port 3000
     "localhost:3000", # Also common
     "http://127.0.0.1:3000",
-    "127.0.0.1:3000"
+    "127.0.0.1:3000",
+    "https://codedocgen-frontend.vercel.app",  # Add the deployed frontend URL
 ]
 
 # Add any additional origins from environment variable
