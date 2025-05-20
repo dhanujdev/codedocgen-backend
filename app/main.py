@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+import os
+from dotenv import load_dotenv
 
 from .routers import repo
+
+# Load environment variables
+load_dotenv()
 
 # Set up logging
 logging.basicConfig(
@@ -17,12 +22,19 @@ app = FastAPI(
 )
 
 # CORS middleware configuration
-origins = [
+default_origins = [
     "http://localhost:3000",  # Assuming React frontend runs on port 3000
     "localhost:3000", # Also common
     "http://127.0.0.1:3000",
     "127.0.0.1:3000"
 ]
+
+# Add any additional origins from environment variable
+if os.getenv("ALLOW_ORIGINS"):
+    additional_origins = os.getenv("ALLOW_ORIGINS").split(",")
+    origins = default_origins + additional_origins
+else:
+    origins = default_origins
 
 app.add_middleware(
     CORSMiddleware,
@@ -50,4 +62,5 @@ app.include_router(repo.router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True) 
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True) 
